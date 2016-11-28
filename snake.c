@@ -25,7 +25,7 @@ int main()
 void change_dir(int signum)
 {
 	int c = getchar();
-	if(c == '\033') // 키입력이 방향키인지 판별한다
+	if(c == '\033') // why this character breaked? catch arrow key input
 	{
 		c = getchar();
 		c = getchar();
