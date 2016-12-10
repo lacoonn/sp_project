@@ -128,12 +128,8 @@ void start_game()
 	i=COLS;
 	j=LINES;
 	initscr();
-	for(i=0;i<=LINES-1;i++){//벽만 남겨두고 화면을 모두 지움 
-		for(j=0;j<COLS-1;j++){
-			move(i,j);
-			addstr(" ");
-		}
-	}
+	clear();
+	print_bound();
 	for(i=2;i<4;i++){//time을 보여줄 테두리 출력
 		move(i,COLS-20);
 		addstr("*");
