@@ -49,6 +49,7 @@ void print_menu() {
 	head.y_dir = 0;
 	head.ttm = 5;
 	head.ttg = 5;
+	head.score = 0;
 
 	initscr();
 	print_bound();//boundary 출력 함수 호출
@@ -102,6 +103,7 @@ void print_rule()
 void start_game()
 {
 	int i,j;
+	char str[10];//score를 string으로 바꿔서 잠시 저장할 변수
 	struct snake *temp; // malloc을 위한 변수
 
 	temp = (struct snake*)malloc(sizeof(struct snake));
@@ -141,7 +143,9 @@ void start_game()
 	move(i,COLS-20);
 	addstr("*****************");
 	move(2,COLS-19);
-	addstr("time:");
+	addstr("time : ");
+	sprintf(str, "%d", head.score);
+	addstr(str);//print score
 	print_bound();
 	mvaddch(p_snake->y_pos, p_snake->x_pos, HEAD);//snake의 머리 출력
 	mvaddch(temp->y_pos, temp->x_pos, BODY);//snake의 몸 출력
