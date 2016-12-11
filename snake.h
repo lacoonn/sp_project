@@ -21,7 +21,7 @@ struct snake
 
 struct head
 {
-	int ttg, ttm, x_dir, y_dir; // x, y 방향
+	int ttg, ttm, x_dir, y_dir, score; // x,y direction, timevalue, interval, game score
 };
 
 struct snake *p_snake;
