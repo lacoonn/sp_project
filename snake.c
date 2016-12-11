@@ -25,7 +25,7 @@ int main()
 void change_dir(int signum)
 {
 	int c = getchar();
-	if(c == '\033') // why this character breaked? catch arrow key input
+	if(c == '\033') // catch arrow key input
 	{
 		c = getchar();
 		c = getchar();
@@ -64,6 +64,8 @@ void change_dir(int signum)
 void move_snake(int signum)
 {
 	int temp_ch; // 임시로 다음 위치의 문자를 가져오는 변수
+	char str[10];//score 변수를 string으로 바꿔서 저장할 변수
+
 	signal(SIGALRM, SIG_IGN);
 	signal(SIGIO, SIG_IGN);
 	if(head.ttg-- == 0)
@@ -95,10 +97,13 @@ void move_snake(int signum)
 		}
 		else if((temp_ch = (int)inch()) == (int)TOKEN)
 		{
+			head.score += 100;
 			//여기에 꼬리 증가 함수 넣을 예정(새로 추가한 꼬리는 함수안에서 mvaddch해줘야함)
 		}
 
 		mvaddch(p_snake->y_pos, p_snake->x_pos, HEAD);
+		sprintf(str, "%d", head.score);
+		mvaddstr(2, COLS-12, str);
 		move(0, 0);
 		
 
