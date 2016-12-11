@@ -139,7 +139,8 @@ void start_game()
 	move(i,COLS-20);
 	addstr("*****************");
 	move(2,COLS-19);
-	addstr("time : ");
+
+	addstr("score:");
 	sprintf(str, "%d", head.score);
 	addstr(str);//print score
 	print_bound();
