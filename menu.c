@@ -137,7 +137,7 @@ void start_game()
 	move(i,COLS-20);
 	addstr("*****************");
 	move(2,COLS-19);
-	addstr("time:");
+	addstr("score:");
 	print_bound();
 	mvaddch(p_snake->y_pos, p_snake->x_pos, HEAD);//snake의 머리 출력
 	mvaddch(temp->y_pos, temp->x_pos, BODY);//snake의 몸 출력
