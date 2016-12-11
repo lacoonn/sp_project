@@ -6,7 +6,7 @@ void make_token(void)
 	int number=0;
 	int x,y;
 	srand(time(NULL));
-	while(number<=5)
+	while(number<=0)
 	{
 		x=rand()%(COLS-4)+2;
 		y=rand()%(LINES-4)+2;

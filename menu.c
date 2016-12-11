@@ -132,18 +132,22 @@ void start_game()
 	initscr();
 	clear();
 	print_bound();
+	/*
 	for(i=2;i<4;i++){//time을 보여줄 테두리 출력
 		move(i,COLS-20);
 		addstr("*");
 	}
 	move(i,COLS-20);
 	addstr("*****************");
-	move(2,COLS-19);
-
+	move(2, COLS-19);
+	*/
+	move(0,COLS-19);
+	standout();
 	addstr("score:");
 	sprintf(str, "%d", head.score);
 	addstr(str);//print score
-	print_bound();
+	standend();
+	make_token();
 	mvaddch(p_snake->y_pos, p_snake->x_pos, HEAD);//snake의 머리 출력
 	mvaddch(temp->y_pos, temp->x_pos, BODY);//snake의 몸 출력
 	refresh();//화면에 출력

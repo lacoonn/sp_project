@@ -98,12 +98,15 @@ void move_snake(int signum)
 		else if((temp_ch = (int)inch()) == (int)TOKEN)
 		{
 			head.score += 100;
-			//여기에 꼬리 증가 함수 넣을 예정(새로 추가한 꼬리는 함수안에서 mvaddch해줘야함)
+			add_tail();//여기에 꼬리 증가 함수 넣을 예정(새로 추가한 꼬리는 함수안에서 mvaddch해줘야함)
+			make_token();
 		}
 
 		mvaddch(p_snake->y_pos, p_snake->x_pos, HEAD);
+		standout();
 		sprintf(str, "%d", head.score);
-		mvaddstr(2, COLS-12, str);
+		mvaddstr(0, COLS-13, str);
+		standend();
 		move(0, 0);
 		
 
