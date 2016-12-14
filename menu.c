@@ -78,6 +78,40 @@ void print_menu() {
 	}
 }
 
+void print_replay()
+{
+	char c;
+	
+	head.x_dir = 1;
+	head.y_dir = 0;
+	head.ttm = 5;
+	head.ttg = 5;
+	head.score = 0;
+
+	initscr();
+	print_bound();
+
+	move((LINES - 1)/3-1,(COLS - 1)/2.7);
+	addstr("+--------------------------+");
+	move((LINES-1)/3,(COLS-1)/2.7+3);
+	standout();
+	addstr("Do You Want To Replay?");
+	standend();
+	move((LINES-1)/3+1,(COLS -1)/2.7);
+	addstr("+--------------------------+");
+	move((LINES-1)/2,(COLS-1)/2.7);
+	addstr("s,S: START");
+	move((LINES-1)/2+3,(COLS-1)/2.7);
+	addstr("q,Q:FINISH");
+	refresh();
+	
+	c=getchar();
+	while(1){
+		if(c=='s'||c=='S'){print_rule();break;}
+		else if(c=='q'||c=='Q'){endwin();exit(0);break;}
+		else c = getchar();
+	}
+}
 void print_rule()
 {
 	char c;
