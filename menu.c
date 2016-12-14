@@ -45,7 +45,7 @@ void print_bound() {
 void print_menu() {
 	char c;
 	
-	head.x_dir = 0;
+	head.x_dir = 1;
 	head.y_dir = 0;
 	head.ttm = 5;
 	head.ttg = 5;
@@ -82,7 +82,7 @@ void print_replay()
 {
 	char c;
 	
-	head.x_dir = 0;
+	head.x_dir = 1;
 	head.y_dir = 0;
 	head.ttm = 5;
 	head.ttg = 5;
@@ -182,8 +182,8 @@ void start_game()
 	refresh();//화면에 출력
 
 	terminal_set(0);
-	set_async(0);
 	signal(SIGIO, change_dir);
+	set_async(0);
 	signal(SIGALRM, move_snake);
 	set_ticker(10);
 

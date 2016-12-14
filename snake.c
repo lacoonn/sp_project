@@ -25,6 +25,7 @@ int main()
 void change_dir(int signum)
 {
 	int c = getchar();
+
 	if(c == '\033') // catch arrow key input
 	{
 		c = getchar();
@@ -66,8 +67,6 @@ void move_snake(int signum)
 	int temp_ch; // 임시로 다음 위치의 문자를 가져오는 변수
 	char str[10];//score 변수를 string으로 바꿔서 저장할 변수
 	
-	if(head.x_dir || head.y_dir)
-	{
 
 	signal(SIGALRM, SIG_IGN);
 	signal(SIGIO, SIG_IGN);
@@ -97,21 +96,23 @@ void move_snake(int signum)
 		if((temp_ch = (int)inch()) == (int)'*' || (temp_ch == (int)BODY)) // 충돌을 판정하는 부분
 		{
 			clear();
+			free_snake();
 			terminal_set(1);
 			set_async(1);
 			signal(SIGIO, 0);
-			signal(SIGALRM, 0);
 			set_ticker(0);
-			print_replay();//여기에 종료 함수 넣을 예정
+			signal(SIGALRM, 0);
+			print_replay();
 		}
-		else if((temp_ch = (int)inch()) == (int)TOKEN)
+		else if((temp_ch = (int)inch()) == (int)TOKEN)//when snake eat token
 		{
 			head.score += 100;
-			add_tail();//여기에 꼬리 증가 함수 넣을 예정(새로 추가한 꼬리는 함수안에서 mvaddch해줘야함)
+			add_tail();
 			make_token();
 		}
 
 		mvaddch(p_snake->y_pos, p_snake->x_pos, HEAD);
+		mvaddch(token.y, token.x, TOKEN);
 		standout();
 		sprintf(str, "%d", head.score);
 		mvaddstr(0, COLS-13, str);
@@ -125,6 +126,17 @@ void move_snake(int signum)
 	signal(SIGALRM, move_snake);
 	signal(SIGIO, change_dir);
 
+}
+
+void free_snake()
+{
+	struct snake *temp;
+
+	while(p_snake != NULL)
+	{
+		temp = p_snake;
+		p_snake = p_snake->blink;
+		free(temp);
 	}
 }
 
@@ -151,17 +163,18 @@ void terminal_set(int i)
 void set_async(int i)
 {
 	int fd_flags;
-	int pre_flags;
+	static int pre_flags;
 
 	if(i == 0)
 	{
-	fcntl(0, F_SETOWN, getpid());
-	fd_flags = fcntl(0, F_GETFL);
-	pre_flags = fd_flags;
-	fcntl(0, F_SETFL, (fd_flags | O_ASYNC));
+		fcntl(0, F_SETOWN, getpid());
+		fd_flags = fcntl(0, F_GETFL);
+		pre_flags = fd_flags;
+		fcntl(0, F_SETFL, (fd_flags | O_ASYNC));
 	}
 	if(i == 1)
 	{
+		fcntl(0, F_SETOWN, 0);
 		fcntl(0, F_SETFL, pre_flags);
 	}
 }

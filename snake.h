@@ -32,6 +32,12 @@ struct head
 	int ttg, ttm, x_dir, y_dir, score; // x,y direction, timevalue, interval, game score
 };
 
+struct token
+{
+	int x, y;
+};
+
+struct token token;
 struct snake *p_snake;
 struct head head;
 struct snake *last_tail;
