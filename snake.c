@@ -1,65 +1,50 @@
 #include "snake.h"
 
-//void terminal_set(int);
-//void set_async(int);
-//int set_ticker(int);
-//void change_dir(int);
-//void move_snake(int);
-
-
 int main()
 {
 	print_menu();
-	//terminal_set();
-	//set_async();
-	//signal(SIGIO, change_dir);
-	//signal(SIGALRM, move_snake);
 	
-	//set_ticker(10);
-
-	while (1) {}
+	while (1)
+	{
+		int c = getchar();
+		if ((c == '\033') || (c == 91)) // catch arrow key input
+		{
+			if (c == '\033')
+				c = getchar();
+			c = getchar();
+			if (c == 67 && head.x_dir != -1) // 오른쪽 화살표이면 x 방향을 1로 한다.
+			{
+				head.x_dir = 1;
+				head.y_dir = 0;
+				head.ttg = 0;
+			}
+			else if (c == 68 && head.x_dir != 1) // 왼쪽 화살표이면 x 방향을 -1로 한다.
+			{
+				head.x_dir = -1;
+				head.y_dir = 0;
+				head.ttg = 0;
+			}
+			else if (c == 65 && head.y_dir != 1) // 위쪽 화살표이면 y 방향을 -1로 한다.
+			{
+				head.x_dir = 0;
+				head.y_dir = -1;
+				head.ttg = 0;
+			}
+			else if (c == 66 && head.y_dir != -1) // 아래쪽 화살표이면 y 방향을 1로 한다.
+			{
+				head.x_dir = 0;
+				head.y_dir = 1;
+				head.ttg = 0;
+			}
+		}
+		else if (c == 'q' || c == 'Q')
+		{
+			endwin();
+			exit(0);
+		}
+	}
 
 	return 0;
-}
-
-void change_dir(int signum)
-{
-	int c = getchar();
-
-	if(c == '\033') // catch arrow key input
-	{
-		c = getchar();
-		c = getchar();
-		if(c == 67 && head.x_dir != -1) // 오른쪽 화살표이면 x 방향을 1로 한다.
-		{
-			head.x_dir = 1;
-			head.y_dir = 0;
-			head.ttg = 0;
-		}
-		else if(c == 68 && head.x_dir != 1) // 왼쪽 화살표이면 x 방향을 -1로 한다.
-		{
-			head.x_dir = -1;
-			head.y_dir = 0;
-			head.ttg = 0;
-		}
-		else if(c == 65 && head.y_dir != 1) // 위쪽 화살표이면 y 방향을 -1로 한다.
-		{
-			head.x_dir = 0;
-			head.y_dir = -1;
-			head.ttg = 0;
-		}
-		else if(c == 66 && head.y_dir != -1) // 아래쪽 화살표이면 y 방향을 1로 한다.
-		{
-			head.x_dir = 0;
-			head.y_dir = 1;
-			head.ttg = 0;
-		}
-	}
-	else if(c == 'q' || c == 'Q')
-	{
-		endwin();
-		exit(0);
-	}
 }
 
 void move_snake(int signum)
@@ -68,8 +53,6 @@ void move_snake(int signum)
 	char str[10];//score 변수를 string으로 바꿔서 저장할 변수
 	
 
-	signal(SIGALRM, SIG_IGN);
-	signal(SIGIO, SIG_IGN);
 	if(head.ttg-- == 0)
 	{
 		head.ttg = head.ttm;
@@ -98,10 +81,6 @@ void move_snake(int signum)
 			clear();
 			free_snake();
 			terminal_set(1);
-			set_async(1);
-			signal(SIGIO, 0);
-			set_ticker(0);
-			signal(SIGALRM, 0);
 			print_replay();
 		}
 		else if((temp_ch = (int)inch()) == (int)TOKEN)//when snake eat token
@@ -123,8 +102,6 @@ void move_snake(int signum)
 		refresh();
 	}
 
-	signal(SIGALRM, move_snake);
-	signal(SIGIO, change_dir);
 
 }
 
@@ -144,40 +121,25 @@ void terminal_set(int i)
 {
 	struct termios ttystate;
 	static struct termios prestate;
+	static int tig = 0;
 	
 	if(i == 0)
 	{
-	tcgetattr(0, &ttystate);
-	prestate = ttystate;
-	ttystate.c_lflag &= ~ICANON; // nocanonical 모드로 변경합니다.
-	ttystate.c_cc[VMIN] = 1;
-	ttystate.c_lflag &= ~ECHO; // noecho 모드로 변경합니다.
-	tcsetattr(0, TCSANOW, &ttystate);
+		tcgetattr(0, &ttystate);
+		prestate = ttystate;
+		ttystate.c_lflag &= ~ICANON; // nocanonical 모드로 변경합니다.
+		ttystate.c_cc[VMIN] = 1;
+		ttystate.c_lflag &= ~ECHO; // noecho 모드로 변경합니다.
+		tcsetattr(0, TCSANOW, &ttystate);
+		tig = 1;
 	}
-	else if(i == 1)
+	else if(i == 1 && tig == 1)
 	{
 		tcsetattr(0, TCSANOW, &prestate);
+		tig = 0;
 	}
 }
 
-void set_async(int i)
-{
-	int fd_flags;
-	static int pre_flags;
-
-	if(i == 0)
-	{
-		fcntl(0, F_SETOWN, getpid());
-		fd_flags = fcntl(0, F_GETFL);
-		pre_flags = fd_flags;
-		fcntl(0, F_SETFL, (fd_flags | O_ASYNC));
-	}
-	if(i == 1)
-	{
-		fcntl(0, F_SETOWN, 0);
-		fcntl(0, F_SETFL, pre_flags);
-	}
-}
 		
 int set_ticker(int n_msecs)
 {

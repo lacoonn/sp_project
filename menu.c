@@ -134,7 +134,7 @@ void print_rule()
 	move((LINES - 1) / 2 + 3, (COLS - 1) / 2.7);
 	addstr("q,Q  :quit");
 	refresh();
-	getchar();
+	c = getchar();
 	start_game();
 }
 
@@ -182,8 +182,6 @@ void start_game()
 	refresh();//화면에 출력
 
 	terminal_set(0);
-	signal(SIGIO, change_dir);
-	set_async(0);
 	signal(SIGALRM, move_snake);
 	set_ticker(10);
 
