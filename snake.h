@@ -7,10 +7,18 @@
 #include <unistd.h>
 #include <sys/time.h>
 
+#define COLS 80
+#define LINES 40
 #define BLANK ' '
 #define HEAD '@'
 #define BODY 'O'
 #define TOKEN '#'
+
+void terminal_set(int);
+void set_async(int);
+void change_dir(int);
+void move_snake(int);
+int set_ticker(int);
 
 struct snake
 {

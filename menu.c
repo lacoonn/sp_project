@@ -45,7 +45,7 @@ void print_bound() {
 void print_menu() {
 	char c;
 	
-	head.x_dir = 1;
+	head.x_dir = 0;
 	head.y_dir = 0;
 	head.ttm = 5;
 	head.ttg = 5;
@@ -82,7 +82,7 @@ void print_replay()
 {
 	char c;
 	
-	head.x_dir = 1;
+	head.x_dir = 0;
 	head.y_dir = 0;
 	head.ttm = 5;
 	head.ttg = 5;
@@ -115,6 +115,8 @@ void print_replay()
 void print_rule()
 {
 	char c;
+
+	clear();
 	initscr();
 	print_bound();
 	move((LINES - 1) / 3 - 1, (COLS - 1) / 2.7);
@@ -123,6 +125,8 @@ void print_rule()
 	standout();
 	addstr("SNAKE GAME RULE!");
 	standend();
+	move((LINES-1)/3+1, (COLS-1)/2.7);
+	addstr("+---------------------------+");
 	move((LINES - 1) / 2, (COLS - 1) / 2.7);
 	addstr("<PRESS ANY KEY TO START>");
 	move((LINES - 1) / 2 + 2, (COLS - 1) / 2.7);
@@ -166,15 +170,6 @@ void start_game()
 	initscr();
 	clear();
 	print_bound();
-	/*
-	for(i=2;i<4;i++){//time을 보여줄 테두리 출력
-		move(i,COLS-20);
-		addstr("*");
-	}
-	move(i,COLS-20);
-	addstr("*****************");
-	move(2, COLS-19);
-	*/
 	move(0,COLS-19);
 	standout();
 	addstr("score:");
@@ -185,5 +180,11 @@ void start_game()
 	mvaddch(p_snake->y_pos, p_snake->x_pos, HEAD);//snake의 머리 출력
 	mvaddch(temp->y_pos, temp->x_pos, BODY);//snake의 몸 출력
 	refresh();//화면에 출력
+
+	terminal_set(0);
+	set_async(0);
+	signal(SIGIO, change_dir);
+	signal(SIGALRM, move_snake);
+	set_ticker(10);
 
 }

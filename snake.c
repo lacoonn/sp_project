@@ -1,21 +1,21 @@
 #include "snake.h"
 
-void terminal_set();
-void set_async();
-int set_ticker(int);
-void change_dir(int);
-void move_snake(int);
+//void terminal_set(int);
+//void set_async(int);
+//int set_ticker(int);
+//void change_dir(int);
+//void move_snake(int);
 
 
 int main()
 {
 	print_menu();
-	terminal_set();
-	set_async();
-	signal(SIGIO, change_dir);
-	signal(SIGALRM, move_snake);
+	//terminal_set();
+	//set_async();
+	//signal(SIGIO, change_dir);
+	//signal(SIGALRM, move_snake);
 	
-	set_ticker(10);
+	//set_ticker(10);
 
 	while (1) {}
 
@@ -65,6 +65,9 @@ void move_snake(int signum)
 {
 	int temp_ch; // 임시로 다음 위치의 문자를 가져오는 변수
 	char str[10];//score 변수를 string으로 바꿔서 저장할 변수
+	
+	if(head.x_dir || head.y_dir)
+	{
 
 	signal(SIGALRM, SIG_IGN);
 	signal(SIGIO, SIG_IGN);
@@ -94,6 +97,11 @@ void move_snake(int signum)
 		if((temp_ch = (int)inch()) == (int)'*' || (temp_ch == (int)BODY)) // 충돌을 판정하는 부분
 		{
 			clear();
+			terminal_set(1);
+			set_async(1);
+			signal(SIGIO, 0);
+			signal(SIGALRM, 0);
+			set_ticker(0);
 			print_replay();//여기에 종료 함수 넣을 예정
 		}
 		else if((temp_ch = (int)inch()) == (int)TOKEN)
@@ -116,26 +124,46 @@ void move_snake(int signum)
 
 	signal(SIGALRM, move_snake);
 	signal(SIGIO, change_dir);
+
+	}
 }
 
-void terminal_set()
+void terminal_set(int i)
 {
 	struct termios ttystate;
-
+	static struct termios prestate;
+	
+	if(i == 0)
+	{
 	tcgetattr(0, &ttystate);
+	prestate = ttystate;
 	ttystate.c_lflag &= ~ICANON; // nocanonical 모드로 변경합니다.
 	ttystate.c_cc[VMIN] = 1;
 	ttystate.c_lflag &= ~ECHO; // noecho 모드로 변경합니다.
 	tcsetattr(0, TCSANOW, &ttystate);
+	}
+	else if(i == 1)
+	{
+		tcsetattr(0, TCSANOW, &prestate);
+	}
 }
 
-void set_async()
+void set_async(int i)
 {
 	int fd_flags;
-	
+	int pre_flags;
+
+	if(i == 0)
+	{
 	fcntl(0, F_SETOWN, getpid());
 	fd_flags = fcntl(0, F_GETFL);
+	pre_flags = fd_flags;
 	fcntl(0, F_SETFL, (fd_flags | O_ASYNC));
+	}
+	if(i == 1)
+	{
+		fcntl(0, F_SETFL, pre_flags);
+	}
 }
 		
 int set_ticker(int n_msecs)
