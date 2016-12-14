@@ -94,7 +94,7 @@ void move_snake(int signum)
 		if((temp_ch = (int)inch()) == (int)'*' || (temp_ch == (int)BODY)) // 충돌을 판정하는 부분
 		{
 			clear();
-			print_menu();//여기에 종료 함수 넣을 예정
+			print_replay();//여기에 종료 함수 넣을 예정
 		}
 		else if((temp_ch = (int)inch()) == (int)TOKEN)
 		{
