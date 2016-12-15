@@ -81,12 +81,12 @@ void print_menu() {
 void print_replay()
 {
 	char c;
+	char str[10];
 	
 	head.x_dir = 1;
 	head.y_dir = 0;
 	head.ttm = 5;
 	head.ttg = 5;
-	head.score = 0;
 
 	initscr();
 	print_bound();
@@ -99,11 +99,19 @@ void print_replay()
 	standend();
 	move((LINES-1)/3+1,(COLS -1)/2.7);
 	addstr("+--------------------------+");
+	move((LINES-1)/3+2,(COLS-1)/2-1);
+	standout();
+	addstr("Score:");
+	sprintf(str, "%d", head.score);
+	addstr(str);
+	standend();
 	move((LINES-1)/2,(COLS-1)/2.7);
 	addstr("s,S: START");
 	move((LINES-1)/2+3,(COLS-1)/2.7);
 	addstr("q,Q:FINISH");
 	refresh();
+
+	head.score = 0;
 	
 	c=getchar();
 	while(1){
@@ -170,7 +178,7 @@ void start_game()
 	initscr();
 	clear();
 	print_bound();
-	move(0,COLS-19);
+	move(0,COLS-10);
 	standout();
 	addstr("score:");
 	sprintf(str, "%d", head.score);

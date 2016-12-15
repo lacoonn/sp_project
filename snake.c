@@ -94,7 +94,7 @@ void move_snake(int signum)
 		mvaddch(token.y, token.x, TOKEN);
 		standout();
 		sprintf(str, "%d", head.score);
-		mvaddstr(0, COLS-13, str);
+		mvaddstr(0, COLS-4, str);
 		standend();
 		move(0, 0);
 		
