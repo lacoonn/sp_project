@@ -1,8 +1,8 @@
 # sp_project
 
-This page is for System Programming Project.\n
+This page is for System Programming Project.
 
-Class_C Team_3.\n
+Class_C Team_3.
 
 Demo video(youtube) : https://youtu.be/TFZ1YeEyNd8
 
